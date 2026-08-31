@@ -24,11 +24,13 @@ struct AppetizerTabView: View {
 
         }
         .tint(Color("brandPrimary"))
+        
             
     }
 }
 
 #Preview {
     AppetizerTabView()
+        .preferredColorScheme(.light)
     
 }
