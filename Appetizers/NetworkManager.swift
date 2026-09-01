@@ -5,11 +5,13 @@
 //  Created by Azat Japarov on 31.08.26.
 //
 
-import Foundation
+import UIKit
 
 final class NetworkManager {
     
     static let shared = NetworkManager()
+    private let cache = NSCache<NSString, UIImage>()
+    
     private init() {}
     
     static let baseURL = "https://my-json-server.typicode.com/Myrat204209/Appetizer-fakeserver/"
@@ -52,6 +54,34 @@ final class NetworkManager {
         }
         
         task.resume()
+    }
+    
+    
+    func downloadImage(from urlString: String, completed: @escaping(UIImage?)-> Void) {
+        
+        let cacheKey = NSString(string: urlString)
+        
+        if let image = cache.object(forKey: cacheKey) {
+            return completed(image)
+        }
+        
+        guard let url = URL(string: urlString) else {
+            return completed(nil)
+        }
+        
+        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
+            guard let data = data, let image = UIImage(data: data) else {
+                return completed(nil)
+            }
+            
+            self.cache.setObject(image, forKey: cacheKey)
+            completed(image)
+            
+        }
+        
+        task.resume()
+        
+        
     }
     
 }
