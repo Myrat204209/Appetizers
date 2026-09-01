@@ -10,12 +10,12 @@ import Foundation
 final class NetworkManager {
     
     static let shared = NetworkManager()
-    
-    static let baseURL = "https://seanallen-course-backend.herokuapp.com/swiftui-fundamentals/appetizers/"
-    
-    private let appetizerURL = baseURL + "appetizers"
-    
     private init() {}
+    
+    static let baseURL = "https://my-json-server.typicode.com/Myrat204209/Appetizer-fakeserver/"
+    private let appetizerURL = baseURL + "request"
+    
+    
     
     func getAppetizers(completed : @escaping (Result<[Appetizer], AppetizerError>) -> Void) {
         guard let url = URL(string: appetizerURL) else {
@@ -38,12 +38,13 @@ final class NetworkManager {
                 completed(.failure(.invalidData))
                 return
             }
-            
+            print("Data from the server \(type(of: data))")
             Task { @MainActor in
                 do {
                     let decoder = JSONDecoder()
-                    let decodedResponse = try decoder.decode(AppetizerResponse.self, from: data)
-                    completed(.success(decodedResponse.request))
+//                    let decodedResponse = try decoder.decode(AppetizerResponse.self, from: data)
+                    let decodedResponse = try decoder.decode([Appetizer].self, from: data)
+                    completed(.success(decodedResponse))
                 } catch {
                     completed(.failure(.invalidData))
                 }
