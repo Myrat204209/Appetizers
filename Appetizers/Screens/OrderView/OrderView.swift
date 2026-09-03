@@ -16,6 +16,7 @@ struct OrderView: View {
             ZStack {
                 VStack {
                     List {
+//                        ForEach(MockData.orderItems) { appetizer in
                         ForEach(order.items) { appetizer in
                             AppetizerListCell(appetizer: appetizer)
                             
@@ -26,8 +27,12 @@ struct OrderView: View {
                     Button {
                         
                     } label: {
-                        AppetizerButton(title: "$\(order.totalPrice, default : "%.2f") - Place Order")
+//                        AppetizerButton(title: "$\(order.totalPrice, default : "%.2f") - Place Order")
+                        Text("$\(order.totalPrice, default : "%.2f") - Place Order")
+                        
                     }
+//                    .modifier(StandardButtonStyle())
+                    .standardButtonStyle()
                     .padding(.bottom, 25)
                     
                 }
