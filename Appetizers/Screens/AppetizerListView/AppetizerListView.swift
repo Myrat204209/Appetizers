@@ -35,7 +35,7 @@ struct AppetizerListView: View {
                                     isShowingDetail: $viewModel.isShowingDetail)
             }
             
-            if viewModel.isLoading {
+            if !viewModel.isLoading {
                 LoadingView()
             }
             
