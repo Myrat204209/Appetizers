@@ -23,3 +23,14 @@ extension View {
         self.modifier(StandardButtonStyle())
     }
 }
+
+
+extension Image {
+    func listCellImageStyle() -> some View {
+        self
+            .resizable()
+            .aspectRatio(contentMode: ContentMode.fit)
+            .frame(width: 120, height: 90)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+}

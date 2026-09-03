@@ -7,6 +7,7 @@
 
 import SwiftUI
 internal import Combine
+import RegexBuilder
 
 final class AccountViewModel : ObservableObject {
     
@@ -28,7 +29,7 @@ final class AccountViewModel : ObservableObject {
     
     
     func retrieveUser() {
-        guard let userData = userData else { return }
+        guard let userData else { return }
         
         do {
             user = try JSONDecoder().decode(User.self, from: userData)
@@ -59,8 +60,36 @@ final class AccountViewModel : ObservableObject {
 
 extension  String {
     var isValidEmail : Bool {
-        let emailFormat = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailFormat)
-        return emailPredicate.evaluate(with: self)
+//        let emailFormat = /[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,64}/
+//        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailFormat)
+//        return emailPredicate.evaluate(with: self)
+        
+        let emailRegex = Regex {
+            OneOrMore {
+                CharacterClass(
+                    .anyOf("._%+-"),
+                    ("A"..."Z"),
+                    ("0"..."9"),
+                    ("a"..."z")
+                )
+            }
+            "@"
+            OneOrMore {
+                CharacterClass(
+                    .anyOf("-"),
+                    ("A"..."Z"),
+                    ("a"..."z"),
+                    ("0"..."9")
+                )
+            }
+            "."
+            Repeat(2...64) {
+                CharacterClass(
+                    ("A"..."Z"),
+                    ("a"..."z")
+                )
+            }
+        }
+        return self.wholeMatch(of: emailRegex) != nil
     }
 }
